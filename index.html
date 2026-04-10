@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEURON Staff Dashboard</title>
+    
+    <link rel="apple-touch-icon" href="https://github.com/neuron-workplace/neuron_management/blob/main/Logo_English.png?raw=true">
+    <link rel="icon" type="image/png" href="https://github.com/neuron-workplace/neuron_management/blob/main/Logo_English.png?raw=true">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#f0f4f8">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            /* Premium App Brand Colors */
+            --primary-color: #0052cc;
+            --primary-gradient: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+            --primary-light: #e8f0fe;
+            
+            /* Modern UI Colors */
+            --bg-color: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Removes default web tap highlight */
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 70%);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top, 40px) 24px env(safe-area-inset-bottom, 40px);
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 48px;
+            animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+        }
+
+        .header img {
+            width: 96px;
+            height: 96px;
+            border-radius: 28px;
+            box-shadow: 0 16px 32px rgba(0, 82, 204, 0.12), inset 0 0 0 1px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            object-fit: cover;
+            background: white;
+            transition: transform 0.3s ease;
+        }
+
+        .header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* Card Container Layout */
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 480px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+        }
+
+        /* Premium Glassmorphic Card Styles */
+        .nav-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px 24px;
+            border-radius: 24px;
+            border: 1px solid var(--card-border);
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+            transform: translateZ(0); /* Hardware acceleration */
+        }
+
+        /* App-like Active State (Touch) */
+        .nav-card:active {
+            transform: scale(0.96);
+            box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Icon Styling */
+        .icon-wrapper {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-right: 20px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Content inside card */
+        .card-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        .sub-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Chevron Icon for Navigation affordance */
+        .chevron {
+            color: #cbd5e1;
+            font-size: 24px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .nav-card:hover {
+                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
+                transform: translateY(-2px);
+            }
+            .nav-card:hover .icon-wrapper {
+                background: var(--primary-gradient);
+                color: white;
+            }
+            .nav-card:hover .chevron {
+                color: var(--primary-color);
+                transform: translateX(4px);
+            }
+        }
+
+        /* Ripple Effect Styles */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            background-color: rgba(0, 82, 204, 0.1);
+            pointer-events: none;
+        }
+
+        /* Responsive shift for larger screens */
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+                display: grid;
+                max-width: 800px;
+            }
+            .nav-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 24px;
+            }
+            .icon-wrapper {
+                margin-right: 0;
+                margin-bottom: 20px;
+                width: 72px;
+                height: 72px;
+            }
+            .chevron {
+                display: none;
+            }
+        }
+
+        /* App-like smooth animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="https://github.com/neuron-workplace/neuron_management/blob/main/Logo_English.png?raw=true" alt="Neuron Logo">
+        <h2>NEURON</h2>
+        <p>Admission Coaching Management</p>
+    </div>
+
+    <div class="grid">
+        <a href="addmission_form.html" class="nav-card">
+            <div class="icon-wrapper">
+                <i class="ph ph-clipboard-text"></i>
+            </div>
+            <div class="card-content">
+                <div class="label">Admission Form</div>
+                <div class="sub-label">Register new enrollments</div>
+            </div>
+            <i class="ph ph-caret-right chevron"></i>
+        </a>
+        
+        <a href="results.html" class="nav-card">
+            <div class="icon-wrapper">
+                <i class="ph ph-paper-plane-right"></i>
+            </div>
+            <div class="card-content">
+                <div class="label">Send Results</div>
+                <div class="sub-label">Broadcast marks to guardians</div>
+            </div>
+            <i class="ph ph-caret-right chevron"></i>
+        </a>
+
+        <a href="individual_result.html" class="nav-card">
+            <div class="icon-wrapper">
+                <i class="ph ph-exam"></i>
+            </div>
+            <div class="card-content">
+                <div class="label">Individual Result</div>
+                <div class="sub-label">See progress of any student</div>
+            </div>
+            <i class="ph ph-caret-right chevron"></i>
+        </a>
+
+        <a href="batch_result.html" class="nav-card">
+            <div class="icon-wrapper">
+                <i class="ph ph-folders"></i>
+            </div>
+            <div class="card-content">
+                <div class="label">Batch Result</div>
+                <div class="sub-label">See progress of a batch</div>
+            </div>
+            <i class="ph ph-caret-right chevron"></i>
+        </a>
+    </div>
+
+    <script>
+        // Native App-like Ripple Effect for touch/click interaction
+        function createRipple(event) {
+            const button = event.currentTarget;
+            
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            const rect = button.getBoundingClientRect();
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - rect.left - radius}px`;
+            circle.style.top = `${event.clientY - rect.top - radius}px`;
+            circle.classList.add("ripple");
+            
+            // Remove existing ripples to prevent DOM clutter
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+        }
+
+        const cards = document.querySelectorAll('.nav-card');
+        for (const card of cards) {
+            card.addEventListener('mousedown', createRipple);
+            card.addEventListener('touchstart', (e) => {
+                // Pass the first touch point to the ripple function
+                const touch = e.touches[0];
+                createRipple({
+                    currentTarget: card,
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+            }, {passive: true});
+        }
+    </script>
+</body>
+</html>
